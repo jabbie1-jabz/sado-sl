@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SADO-SL Admin - Agricultural Marketplace</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* LOGIN PAGE */
+    .login-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .login-box {
+      background: white;
+      padding: 50px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+      font-size: 28px;
+    }
+
+    .login-box p {
+      color: #7f8c8d;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .login-box .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .login-box label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #bdc3c7;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 20px;
+    }
+
+    .login-box button:hover {
+      background: #764ba2;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* ADMIN DASHBOARD */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .admin-header h1 {
+      color: #2c3e50;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .customer-link, .logout-btn {
+      padding: 10px 20px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .customer-link {
+      background: #27ae60;
+    }
+
+    .customer-link:hover {
+      background: #229954;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+
+    .info-box {
+      background: #d5f4e6;
+      border: 2px solid #27ae60;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      color: #27ae60;
+    }
+
+    .info-box strong {
+      color: #229954;
+    }
+
+    h2 {
+      margin: 30px 0 20px 0;
+      color: #2c3e50;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+    }
+
+    .form-section {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #bdc3c7;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .btn-submit:hover {
+      background: #229954;
+    }
+
+    .products-list {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .product-item {
+      display: grid;
+      grid-template-columns: 150px 1fr 100px;
+      gap: 20px;
+      padding: 15px;
+      border: 1px solid #ecf0f1;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+
+    .product-item img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .product-info h4 {
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .product-info p {
+      color: #7f8c8d;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .btn-delete {
+      padding: 8px 15px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.3s;
+    }
+
+    .btn-delete:hover {
+      background: #c0392b;
+    }
+
+    .message {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .message.success {
+      background: #d5f4e6;
+      color: #27ae60;
+      border: 1px solid #27ae60;
+    }
+
+    .message.error {
+      background: #fadbd8;
+      color: #e74c3c;
+      border: 1px solid #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div id="login-page" class="login-page">
+    <div class="login-box">
+      <h1>🌾 SADO-SL Admin</h1>
+      <p>Agricultural Marketplace Management</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="admin-password">Admin Password</label>
+          <input type="password" id="admin-password" placeholder="Enter admin password" required>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p style="margin-top: 20px; color: #e74c3c; font-size: 12px;">Password: admin123</p>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="admin-page" class="hidden container">
+    <div class="admin-header">
+      <h1>🌾 SADO-SL Admin Dashboard</h1>
+      <div class="header-buttons">
+        <a href="customer.html" target="_blank" class="customer-link">👁️ View Customer Website</a>
+        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>✅ Upload Guide:</strong><br>
+      1. Upload a product or video below<br>
+      2. Click <strong>"👁️ View Customer Website"</strong> button above to see it live<br>
+      3. Your uploads will appear on the customer page immediately!
+    </div>
+
+    <div id="message"></div>
+
+    <!-- UPLOAD PRODUCT SECTION -->
+    <h2>📦 Add New Agricultural Product</h2>
+    <div class="form-section">
+      <form id="good-form">
+        <div class="form-group">
+          <label for="good-title">Product Title</label>
+          <input type="text" id="good-title" placeholder="e.g., Sweet Falaba Pineapples" required>
+        </div>
+        <div class="form-group">
+          <label for="good-category">Category</label>
+          <select id="good-category" required>
+            <option>Fruits</option>
+            <option>Vegetables</option>
+            <option>Pest Control</option>
+            <option>Fertilizer</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="good-qty">Quantity Available</label>
+          <input type="text" id="good-qty" placeholder="e.g., Bulk & Wholesale Supply" required>
+        </div>
+        <div class="form-group">
+          <label for="good-desc">Description</label>
+          <textarea id="good-desc" placeholder="Detailed product description..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="good-image">Product Image</label>
+          <input type="file" id="good-image" accept="image/*" required>
+        </div>
+        <button type="submit" class="btn-submit">➕ Publish Product</button>
+      </form>
+    </div>
+
+    <!-- PUBLISHED PRODUCTS -->
+    <h2>📋 Published Products</h2>
+    <div id="products-list" class="products-list">
+      <p style="text-align: center; color: #95a5a6;">No products yet</p>
+    </div>
+
+    <!-- UPLOAD VIDEO SECTION -->
+    <h2>🎥 Add Farm Video</h2>
+    <div class="form-section">
+      <form id="video-form">
+        <div class="form-group">
+          <label for="video-title">Video Title</label>
+          <input type="text" id="video-title" placeholder="e.g., Farm Overview 2024" required>
+        </div>
+        <div class="form-group">
+          <label for="video-desc">Video Description</label>
+          <textarea id="video-desc" placeholder="Describe your video..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="video-file">Upload Local Video File</label>
+          <input type="file" id="video-file" accept="video/*">
+        </div>
+        <div style="text-align: center; margin: 15px 0; color: #7f8c8d; font-weight: 600;">OR</div>
+        <div class="form-group">
+          <label for="video-url">YouTube Video URL</label>
+          <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+        <button type="submit" class="btn-submit">🎬 Publish Video</button>
+      </form>
+    </div>
+
+    <!-- PUBLISHED VIDEOS -->
+    <h2>🎞️ Published Videos</h2>
+    <div id="videos-list" class="products-list">
+      <p style="text-align: center; color: #95a5a6;">No videos yet</p>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = "admin123";
+    const LOGIN_PAGE = document.getElementById("login-page");
+    const ADMIN_PAGE = document.getElementById("admin-page");
+    const MESSAGE_DIV = document.getElementById("message");
+
+    let goodsList = JSON.parse(localStorage.getItem("sadoGoods")) || [];
+    let videosList = JSON.parse(localStorage.getItem("sadoVideos")) || [];
+
+    // LOGIN HANDLER
+    document.getElementById("login-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const password = document.getElementById("admin-password").value;
+      
+      if (password === ADMIN_PASSWORD) {
+        LOGIN_PAGE.classList.add("hidden");
+        ADMIN_PAGE.classList.remove("hidden");
+        localStorage.setItem("sadoAdminLoggedIn", "true");
+        renderProducts();
+        renderVideos();
+      } else {
+        alert("❌ Incorrect password!");
+        document.getElementById("admin-password").value = "";
+      }
+    });
+
+    // LOGOUT HANDLER
+    function logout() {
+      localStorage.removeItem("sadoAdminLoggedIn");
+      LOGIN_PAGE.classList.remove("hidden");
+      ADMIN_PAGE.classList.add("hidden");
+      document.getElementById("admin-password").value = "";
+    }
+
+    // SHOW MESSAGE
+    function showMessage(text, type) {
+      MESSAGE_DIV.className = `message ${type}`;
+      MESSAGE_DIV.textContent = text;
+      setTimeout(() => {
+        MESSAGE_DIV.className = "";
+        MESSAGE_DIV.textContent = "";
+      }, 3000);
+    }
+
+    // RENDER PRODUCTS
+    function renderProducts() {
+      const list = document.getElementById("products-list");
+      if (goodsList.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #95a5a6;">No products yet</p>';
+        return;
+      }
+
+      list.innerHTML = goodsList.map(item => `
+        <div class="product-item">
+          <img src="${item.image}" alt="${item.title}">
+          <div class="product-info">
+            <h4>${item.title}</h4>
+            <p><strong>Category:</strong> ${item.category}</p>
+            <p><strong>Qty:</strong> ${item.qty}</p>
+            <p>${item.desc.substring(0, 60)}...</p>
+          </div>
+          <button class="btn-delete" onclick="deleteProduct(${item.id})">🗑️ Delete</button>
+        </div>
+      `).join("");
+    }
+
+    // DELETE PRODUCT
+    function deleteProduct(id) {
+      if (confirm("Delete this product?")) {
+        goodsList = goodsList.filter(item => item.id !== id);
+        localStorage.setItem("sadoGoods", JSON.stringify(goodsList));
+        renderProducts();
+        showMessage("✅ Product deleted!", "success");
+      }
+    }
+
+    // HANDLE PRODUCT UPLOAD
+    document.getElementById("good-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const title = document.getElementById("good-title").value;
+      const category = document.getElementById("good-category").value;
+      const qty = document.getElementById("good-qty").value;
+      const desc = document.getElementById("good-desc").value;
+      const fileInput = document.getElementById("good-image");
+
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const newGood = {
+            id: Date.now(),
+            title,
+            category,
+            qty,
+            desc,
+            image: event.target.result
+          };
+          goodsList.unshift(newGood);
+          localStorage.setItem("sadoGoods", JSON.stringify(goodsList));
+          renderProducts();
+          document.getElementById("good-form").reset();
+          showMessage("✅ Product published successfully!", "success");
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      }
+    });
+
+    // RENDER VIDEOS
+    function renderVideos() {
+      const list = document.getElementById("videos-list");
+      if (videosList.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #95a5a6;">No videos yet</p>';
+        return;
+      }
+
+      list.innerHTML = videosList.map(vid => `
+        <div class="product-item">
+          <div style="background: #34495e; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; height: 150px;">
+            ${vid.type === "youtube" ? "🎥 YouTube" : "📹 Local"}
+          </div>
+          <div class="product-info">
+            <h4>${vid.title}</h4>
+            <p><strong>Type:</strong> ${vid.type}</p>
+            <p>${vid.desc.substring(0, 60)}...</p>
+          </div>
+          <button class="btn-delete" onclick="deleteVideo(${vid.id})">🗑️ Delete</button>
+        </div>
+      `).join("");
+    }
+
+    // DELETE VIDEO
+    function deleteVideo(id) {
+      if (confirm("Delete this video?")) {
+        videosList = videosList.filter(item => item.id !== id);
+        localStorage.setItem("sadoVideos", JSON.stringify(videosList));
+        renderVideos();
+        showMessage("✅ Video deleted!", "success");
+      }
+    }
+
+    // HANDLE VIDEO UPLOAD
+    document.getElementById("video-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const title = document.getElementById("video-title").value;
+      const desc = document.getElementById("video-desc").value;
+      const fileInput = document.getElementById("video-file");
+      const youtubeUrl = document.getElementById("video-url").value.trim();
+
+      if (fileInput.files && fileInput.files[0]) {
+        const videoBlobUrl = URL.createObjectURL(fileInput.files[0]);
+        videosList.unshift({
+          id: Date.now(),
+          title,
+          desc,
+          type: "local",
+          src: videoBlobUrl
+        });
+        renderVideos();
+        document.getElementById("video-form").reset();
+        showMessage("✅ Video uploaded!", "success");
+      } else if (youtubeUrl) {
+        let embedUrl = youtubeUrl;
+        if (youtubeUrl.includes("watch?v=")) {
+          const videoId = youtubeUrl.split("watch?v=")[1].split("&")[0];
+          embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        } else if (youtubeUrl.includes("youtu.be/")) {
+          const videoId = youtubeUrl.split("youtu.be/")[1].split("?")[0];
+          embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        videosList.unshift({
+          id: Date.now(),
+          title,
+          desc,
+          type: "youtube",
+          src: embedUrl
+        });
+        localStorage.setItem("sadoVideos", JSON.stringify(videosList));
+        renderVideos();
+        document.getElementById("video-form").reset();
+        showMessage("✅ YouTube video published!", "success");
+      } else {
+        showMessage("❌ Please select a video or paste a YouTube URL", "error");
+      }
+    });
+
+    // CHECK IF ALREADY LOGGED IN
+    if (localStorage.getItem("sadoAdminLoggedIn") === "true") {
+      LOGIN_PAGE.classList.add("hidden");
+      ADMIN_PAGE.classList.remove("hidden");
+      renderProducts();
+      renderVideos();
+    }
+  </script>
+</body>
+</html>

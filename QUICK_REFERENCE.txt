@@ -1,0 +1,64 @@
+🌾 SADO-SL AGRICULTURAL MARKETPLACE
+Quick Reference Card
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📍 LIVE WEBSITES:
+   Customer: https://effulgent-pastelito-2bc023.netlify.app/customer.html
+   Admin:    https://effulgent-pastelito-2bc023.netlify.app/admin.html
+
+🔑 Admin Password: admin123
+
+✨ Access Hidden Admin:
+   1. Go to customer website
+   2. Press: Ctrl + Shift + A
+   3. Click the 🔐 button that appears
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 CONTACT INFORMATION:
+   Email: sierra-integrated@yahoo.com
+   Phone 1: +232 78849865
+   Phone 2: +1(703)844-3307
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🏢 ORGANIZATION:
+   Name: Sierra Integrated Pest Control Agricultural Development Organization
+   Acronym: SADO-SL
+   Founded: January 15, 2017
+   Location: Falaba District, Sierra Leone
+   Founder: Mohamed Lamin Jabbie
+   Land: 50+ acres
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🌐 SHARE WITH CUSTOMERS:
+   https://effulgent-pastelito-2bc023.netlify.app/customer.html
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ FEATURES:
+   ✓ Product Display & Categories
+   ✓ Video Gallery
+   ✓ About Us / Vision / Mission
+   ✓ WhatsApp Integration
+   ✓ Email Integration
+   ✓ Phone Call Integration
+   ✓ Hidden Admin Panel
+   ✓ Admin Upload Features
+   ✓ Mobile Responsive
+   ✓ 24/7 Online
+   ✓ Worldwide Accessible
+   ✓ Free Hosting
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 RENAME TO "SADO-SL":
+   1. https://app.netlify.com
+   2. Sign in
+   3. Settings > General
+   4. Site name: sado-sl
+   5. Save
+
+═══════════════════════════════════════════════════════════════════════════════
