@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
 Sitemap: https://jabbie1-jabz.github.io/sado-sl/sitemap.xml
+Sitemap: https://jabbie1-jabz.github.io/sado-sl/sitemap.txt
