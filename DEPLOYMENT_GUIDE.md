@@ -8,6 +8,8 @@
 2. **Drag & drop ALL files** from this folder:
    - `customer.html`
    - `admin.html`
+   - `marketplace.js`
+   - `admin.js`
    - `logo.jpg`
    - `server.js` (optional)
 
@@ -46,16 +48,17 @@
 
 ## 📝 IMPORTANT NOTES
 
-### **For Online Deployment:**
-- ✅ All HTML files work offline (no server needed)
-- ✅ Email & phone links work automatically
-- ✅ Local storage saves data in visitor's browser
-- ✅ Admin panel is hidden (only accessible with Ctrl+Shift+A)
-
 ### **Data Storage:**
-- Currently uses browser's LocalStorage (data stored locally)
-- When you deploy online, each visitor has their own storage
-- **For permanent data:** You'll need a database (we can add this later)
+- Products and videos are stored in the SADO-SL Supabase project and appear on
+  the customer page across devices. The site needs an internet connection.
+- Media uploads are limited to 50 MB per file and the project's storage quota.
+- To transfer older uploads, sign in on the original laptop and browser and use
+  **Publish older browser uploads**. The original browser data is not deleted.
+  Previously uploaded local videos were not saved permanently and must be
+  uploaded again.
+- `supabase-setup.sql` records the database and storage policies for a new
+  installation. It contains the authorized admin's user ID; update the policies
+  when changing the admin account. Never expose a Supabase secret or service-role key.
 
 ---
 
@@ -65,15 +68,15 @@
 2. **Get your public URL**
 3. **Share with customers**
 4. **Test all features**
-5. **Later:** Add database if you need permanent storage
+5. Sign in to the admin page and publish your listings
 
 ---
 
 ## 🔐 SECURITY REMINDERS
 
-✅ Admin password is `admin123` (change this after hosting!)
-✅ Admin access is hidden - only you know Ctrl+Shift+A
-✅ Change password in admin.html before going live
+Use the email and password created in Supabase Authentication. Hiding the admin
+link is not a security measure; access to publishing is enforced by the database
+and storage policies.
 
 ---
 

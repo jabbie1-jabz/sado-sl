@@ -303,12 +303,16 @@
       <p>Agricultural Marketplace Management</p>
       <form id="login-form">
         <div class="form-group">
+          <label for="admin-email">Admin Email</label>
+          <input type="email" id="admin-email" autocomplete="username" required>
+        </div>
+        <div class="form-group">
           <label for="admin-password">Admin Password</label>
-          <input type="password" id="admin-password" placeholder="Enter admin password" required>
+          <input type="password" id="admin-password" placeholder="Enter admin password" autocomplete="current-password" required>
         </div>
         <button type="submit">Login</button>
       </form>
-      <p style="margin-top: 20px; color: #e74c3c; font-size: 12px;">Password: admin123</p>
+      <p id="login-error" role="alert" style="color: #e74c3c;"></p>
     </div>
   </div>
 
@@ -324,9 +328,10 @@
 
     <div class="info-box">
       <strong>✅ Upload Guide:</strong><br>
-      1. Upload a product or video below<br>
-      2. Click <strong>"👁️ View Customer Website"</strong> button above to see it live<br>
-      3. Your uploads will appear on the customer page immediately!
+      Upload a product or video below to publish it for customers on all devices.
+      Files can be up to 50 MB. To transfer older uploads, use the button below on
+      the laptop and browser where you originally uploaded them.
+      <br><button type="button" id="import-local">Publish older browser uploads</button>
     </div>
 
     <div id="message"></div>
@@ -403,198 +408,8 @@
     </div>
   </div>
 
-  <script>
-    const ADMIN_PASSWORD = "admin123";
-    const LOGIN_PAGE = document.getElementById("login-page");
-    const ADMIN_PAGE = document.getElementById("admin-page");
-    const MESSAGE_DIV = document.getElementById("message");
-
-    let goodsList = JSON.parse(localStorage.getItem("sadoGoods")) || [];
-    let videosList = JSON.parse(localStorage.getItem("sadoVideos")) || [];
-
-    // LOGIN HANDLER
-    document.getElementById("login-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const password = document.getElementById("admin-password").value;
-      
-      if (password === ADMIN_PASSWORD) {
-        LOGIN_PAGE.classList.add("hidden");
-        ADMIN_PAGE.classList.remove("hidden");
-        localStorage.setItem("sadoAdminLoggedIn", "true");
-        renderProducts();
-        renderVideos();
-      } else {
-        alert("❌ Incorrect password!");
-        document.getElementById("admin-password").value = "";
-      }
-    });
-
-    // LOGOUT HANDLER
-    function logout() {
-      localStorage.removeItem("sadoAdminLoggedIn");
-      LOGIN_PAGE.classList.remove("hidden");
-      ADMIN_PAGE.classList.add("hidden");
-      document.getElementById("admin-password").value = "";
-    }
-
-    // SHOW MESSAGE
-    function showMessage(text, type) {
-      MESSAGE_DIV.className = `message ${type}`;
-      MESSAGE_DIV.textContent = text;
-      setTimeout(() => {
-        MESSAGE_DIV.className = "";
-        MESSAGE_DIV.textContent = "";
-      }, 3000);
-    }
-
-    // RENDER PRODUCTS
-    function renderProducts() {
-      const list = document.getElementById("products-list");
-      if (goodsList.length === 0) {
-        list.innerHTML = '<p style="text-align: center; color: #95a5a6;">No products yet</p>';
-        return;
-      }
-
-      list.innerHTML = goodsList.map(item => `
-        <div class="product-item">
-          <img src="${item.image}" alt="${item.title}">
-          <div class="product-info">
-            <h4>${item.title}</h4>
-            <p><strong>Category:</strong> ${item.category}</p>
-            <p><strong>Qty:</strong> ${item.qty}</p>
-            <p>${item.desc.substring(0, 60)}...</p>
-          </div>
-          <button class="btn-delete" onclick="deleteProduct(${item.id})">🗑️ Delete</button>
-        </div>
-      `).join("");
-    }
-
-    // DELETE PRODUCT
-    function deleteProduct(id) {
-      if (confirm("Delete this product?")) {
-        goodsList = goodsList.filter(item => item.id !== id);
-        localStorage.setItem("sadoGoods", JSON.stringify(goodsList));
-        renderProducts();
-        showMessage("✅ Product deleted!", "success");
-      }
-    }
-
-    // HANDLE PRODUCT UPLOAD
-    document.getElementById("good-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const title = document.getElementById("good-title").value;
-      const category = document.getElementById("good-category").value;
-      const qty = document.getElementById("good-qty").value;
-      const desc = document.getElementById("good-desc").value;
-      const fileInput = document.getElementById("good-image");
-
-      if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          const newGood = {
-            id: Date.now(),
-            title,
-            category,
-            qty,
-            desc,
-            image: event.target.result
-          };
-          goodsList.unshift(newGood);
-          localStorage.setItem("sadoGoods", JSON.stringify(goodsList));
-          renderProducts();
-          document.getElementById("good-form").reset();
-          showMessage("✅ Product published successfully!", "success");
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      }
-    });
-
-    // RENDER VIDEOS
-    function renderVideos() {
-      const list = document.getElementById("videos-list");
-      if (videosList.length === 0) {
-        list.innerHTML = '<p style="text-align: center; color: #95a5a6;">No videos yet</p>';
-        return;
-      }
-
-      list.innerHTML = videosList.map(vid => `
-        <div class="product-item">
-          <div style="background: #34495e; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; height: 150px;">
-            ${vid.type === "youtube" ? "🎥 YouTube" : "📹 Local"}
-          </div>
-          <div class="product-info">
-            <h4>${vid.title}</h4>
-            <p><strong>Type:</strong> ${vid.type}</p>
-            <p>${vid.desc.substring(0, 60)}...</p>
-          </div>
-          <button class="btn-delete" onclick="deleteVideo(${vid.id})">🗑️ Delete</button>
-        </div>
-      `).join("");
-    }
-
-    // DELETE VIDEO
-    function deleteVideo(id) {
-      if (confirm("Delete this video?")) {
-        videosList = videosList.filter(item => item.id !== id);
-        localStorage.setItem("sadoVideos", JSON.stringify(videosList));
-        renderVideos();
-        showMessage("✅ Video deleted!", "success");
-      }
-    }
-
-    // HANDLE VIDEO UPLOAD
-    document.getElementById("video-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const title = document.getElementById("video-title").value;
-      const desc = document.getElementById("video-desc").value;
-      const fileInput = document.getElementById("video-file");
-      const youtubeUrl = document.getElementById("video-url").value.trim();
-
-      if (fileInput.files && fileInput.files[0]) {
-        const videoBlobUrl = URL.createObjectURL(fileInput.files[0]);
-        videosList.unshift({
-          id: Date.now(),
-          title,
-          desc,
-          type: "local",
-          src: videoBlobUrl
-        });
-        renderVideos();
-        document.getElementById("video-form").reset();
-        showMessage("✅ Video uploaded!", "success");
-      } else if (youtubeUrl) {
-        let embedUrl = youtubeUrl;
-        if (youtubeUrl.includes("watch?v=")) {
-          const videoId = youtubeUrl.split("watch?v=")[1].split("&")[0];
-          embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        } else if (youtubeUrl.includes("youtu.be/")) {
-          const videoId = youtubeUrl.split("youtu.be/")[1].split("?")[0];
-          embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        }
-
-        videosList.unshift({
-          id: Date.now(),
-          title,
-          desc,
-          type: "youtube",
-          src: embedUrl
-        });
-        localStorage.setItem("sadoVideos", JSON.stringify(videosList));
-        renderVideos();
-        document.getElementById("video-form").reset();
-        showMessage("✅ YouTube video published!", "success");
-      } else {
-        showMessage("❌ Please select a video or paste a YouTube URL", "error");
-      }
-    });
-
-    // CHECK IF ALREADY LOGGED IN
-    if (localStorage.getItem("sadoAdminLoggedIn") === "true") {
-      LOGIN_PAGE.classList.add("hidden");
-      ADMIN_PAGE.classList.remove("hidden");
-      renderProducts();
-      renderVideos();
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3" onerror="document.getElementById('login-error').textContent='Unable to load the admin service. Check your connection and reload.'; document.querySelector('#login-form button').disabled=true"></script>
+  <script src="marketplace.js" onerror="document.getElementById('login-error').textContent='Unable to load the admin service. Please reload.'; document.querySelector('#login-form button').disabled=true"></script>
+  <script src="admin.js" onerror="document.getElementById('login-error').textContent='Unable to load the admin service. Please reload.'; document.querySelector('#login-form button').disabled=true"></script>
 </body>
 </html>

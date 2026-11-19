@@ -606,6 +606,7 @@
         <button class="filter-btn" data-filter="Fertilizer">Fertilizer</button>
       </div>
 
+      <p id="marketplace-status" role="status"></p>
       <div id="goods-grid" class="goods-grid">
         <div class="empty-message">Loading products...</div>
       </div>
@@ -716,9 +717,13 @@
   <!-- HIDDEN ADMIN BUTTON - Activate with Ctrl+Shift+A -->
   <button id="hidden-admin-btn" title="Admin Access" onclick="window.location.href='admin.html'">🔐</button>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3" onerror="document.getElementById('marketplace-status').textContent='Unable to load current listings. Please check your connection and try again.'"></script>
+  <script src="marketplace.js" onerror="document.getElementById('marketplace-status').textContent='Unable to load current listings. Please reload.'"></script>
   <script>
-    let goodsList = JSON.parse(localStorage.getItem("sadoGoods")) || [];
-    let videosList = JSON.parse(localStorage.getItem("sadoVideos")) || [];
+    let goodsList = [];
+    let videosList = [];
+    let activeFilter = "all";
+    let lastItems = null;
 
     const goodsGrid = document.getElementById("goods-grid");
     const videosGrid = document.getElementById("videos-grid");
@@ -737,15 +742,16 @@
         const card = document.createElement("div");
         card.className = "good-card";
         card.innerHTML = `
-          <img src="${item.image}" alt="${item.title}" />
+          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" />
           <div class="good-body">
-            <span class="good-tag">${item.category}</span>
-            <h4>${item.title}</h4>
-            <div class="good-qty">📦 ${item.qty}</div>
-            <p>${item.desc}</p>
-            <button class="btn-inquire" onclick="openInquiry('${item.title.replace(/'/g, "\\'")}')">📋 Inquire Now</button>
+            <span class="good-tag">${escapeHtml(item.category)}</span>
+            <h4>${escapeHtml(item.title)}</h4>
+            <div class="good-qty">📦 ${escapeHtml(item.qty)}</div>
+            <p>${escapeHtml(item.desc)}</p>
+            <button class="btn-inquire">📋 Inquire Now</button>
           </div>
         `;
+        card.querySelector(".btn-inquire").addEventListener("click", () => openInquiry(item.title));
         goodsGrid.appendChild(card);
       });
     }
@@ -765,16 +771,16 @@
 
         let mediaHTML = "";
         if (vid.type === "youtube") {
-          mediaHTML = `<iframe src="${vid.src}" allowfullscreen></iframe>`;
+          mediaHTML = `<iframe src="${escapeHtml(vid.src)}" allowfullscreen></iframe>`;
         } else {
-          mediaHTML = `<video controls src="${vid.src}"></video>`;
+          mediaHTML = `<video controls src="${escapeHtml(vid.src)}"></video>`;
         }
 
         card.innerHTML = `
           ${mediaHTML}
           <div class="video-info">
-            <h4>${vid.title}</h4>
-            <p>${vid.desc}</p>
+            <h4>${escapeHtml(vid.title)}</h4>
+            <p>${escapeHtml(vid.desc)}</p>
           </div>
         `;
         videosGrid.appendChild(card);
@@ -786,7 +792,8 @@
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        renderGoods(btn.dataset.filter);
+        activeFilter = btn.dataset.filter;
+        renderGoods(activeFilter);
       });
     });
 
@@ -835,17 +842,30 @@
       modal.style.display = "none";
     });
 
-    // Initial Render
-    renderGoods();
-    renderVideos();
+    async function refreshMarketplace() {
+      try {
+        const items = await loadMarketplace();
+        document.getElementById("marketplace-status").textContent = "";
+        const snapshot = JSON.stringify(items);
+        if (snapshot === lastItems) return;
+        lastItems = snapshot;
+        goodsList = items.filter(item => item.kind === "product").map(item => item.payload);
+        videosList = items.filter(item => item.kind === "video").map(item => item.payload);
+        renderGoods(activeFilter);
+        renderVideos();
+      } catch (error) {
+        console.error("Could not load marketplace:", error);
+        document.getElementById("marketplace-status").textContent =
+          "Unable to load current listings. Please check your connection and try again.";
+        if (lastItems === null) {
+          goodsGrid.textContent = "";
+          videosGrid.textContent = "";
+        }
+      }
+    }
 
-    // Auto-refresh every 5 seconds to show updates
-    setInterval(() => {
-      goodsList = JSON.parse(localStorage.getItem("sadoGoods")) || [];
-      videosList = JSON.parse(localStorage.getItem("sadoVideos")) || [];
-      renderGoods("all");
-      renderVideos();
-    }, 5000);
+    refreshMarketplace();
+    setInterval(refreshMarketplace, 30000);
 
     // HIDDEN ADMIN ACCESS - Press Ctrl+Shift+A to show admin button
     document.addEventListener('keydown', function(e) {
